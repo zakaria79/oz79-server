@@ -38,6 +38,8 @@ app.use(
   }),
 );
 
+app.get('/', (req, res) => res.send('En cours de développement'));
+
 app.use('/api/contacts', contactsRouter);
 app.use('/api/users', usersRouter);
 // app.use('/', indexRouter);
