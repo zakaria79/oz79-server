@@ -46,7 +46,11 @@ exports.newContact = async (req, res, next) => {
     res.json({ error: false, message: info.response });
   } catch (e) {
     /* handle error */
-    res.json({ error: true, message: 'Une erreur est survenue' });
+    res.json({
+      error: true,
+      message: 'Une erreur est survenue',
+      errMessage: e,
+    });
   }
 };
 
