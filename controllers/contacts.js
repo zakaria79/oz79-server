@@ -29,7 +29,7 @@ exports.newContact = async (req, res, next) => {
 
     var transporter = nodemailer.createTransport({
       host: keys.emailHost,
-      port: emailPort,
+      port: keys.emailPort,
       // secure: false,
       auth: {
         user: keys.senderEmail,
