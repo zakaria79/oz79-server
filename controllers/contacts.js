@@ -24,29 +24,53 @@ exports.newContact = async (req, res, next) => {
 
   try {
     const savedContact = await contact.save();
-    const transporter = nodemailer.createTransport({
+
+    var transporter = nodemailer.createTransport({
       service: 'ssl0.ovh.net',
       auth: {
-        user: keys.senderEmail,
-        pass: keys.senderEmailPassword,
+        user: 'zakaria@zakariaothmane.fr',
+        pass: 'mohamedabdallah',
       },
     });
-    const mailOptions = {
-      from: keys.senderEmail,
-      to: keys.recipientEmail,
-      subject: 'Un nouveau contact dans oz79.fr',
-      text: 'Un nouveau contact dans oz79.fr',
+
+    var mailOptions = {
+      from: 'zakaria@zakariaothmane.fr',
+      to: 'othmane.zakaria79@gmail.com',
+      subject: 'Sending Email using Node.js',
+      text: 'That was easy!',
     };
+
     transporter.sendMail(mailOptions, function(error, info) {
       if (error) {
-        return res.send(error);
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
       }
     });
-    // res.json({ error: false, message: savedContact });
-    res.json({ error: false, message: info.response });
+
+    // const transporter = nodemailer.createTransport({
+    //   service: 'ovh',
+    //   auth: {
+    //     user: keys.senderEmail,
+    //     pass: keys.senderEmailPassword,
+    //   },
+    // });
+    // const mailOptions = {
+    //   from: keys.senderEmail,
+    //   to: keys.recipientEmail,
+    //   subject: 'Un nouveau contact dans oz79.fr',
+    //   text: 'Un nouveau contact dans oz79.fr',
+    // };
+    // transporter.sendMail(mailOptions, function(error, info) {
+    //   if (error) {
+    //     return res.send(error);
+    //   }
+    // });
+    res.json({ error: false, message: savedContact });
+    // return res.json({ error: false, message: info.response });
   } catch (e) {
     /* handle error */
-    res.json({
+    return res.json({
       error: true,
       message: 'Une erreur est survenue',
       errMessage: e,
