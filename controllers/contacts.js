@@ -28,9 +28,9 @@ exports.newContact = async (req, res, next) => {
     let testAccount = await nodemailer.createTestAccount();
 
     var transporter = nodemailer.createTransport({
-      host: 'ssl0.ovh.net',
-      port: 587,
-      secure: false,
+      host: keys.emailHost,
+      port: emailPort,
+      // secure: false,
       auth: {
         user: keys.senderEmail,
         pass: keys.senderEmailPassword,
@@ -39,8 +39,8 @@ exports.newContact = async (req, res, next) => {
     var mailOptions = {
       from: keys.senderEmail,
       to: keys.recipientEmail,
-      subject: 'Sending Email using Node.js',
-      text: 'That was easy!',
+      subject: 'Nouveau contact sur oz79.fr',
+      text: `De : ${email}<br />Message:<br />${message}`,
     };
     transporter.sendMail(mailOptions, function(error, info) {
       if (error) {
