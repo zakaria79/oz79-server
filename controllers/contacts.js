@@ -40,7 +40,7 @@ exports.newContact = async (req, res, next) => {
       from: keys.senderEmail,
       to: keys.recipientEmail,
       subject: 'Nouveau contact sur oz79.fr',
-      text: `De : ${email}<br />Message:<br />${message}`,
+      html: `De : ${email}<br />Message:<br />${message}`,
     };
     transporter.sendMail(mailOptions, function(error, info) {
       if (error) {
