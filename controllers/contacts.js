@@ -25,52 +25,55 @@ exports.newContact = async (req, res, next) => {
   try {
     const savedContact = await contact.save();
 
-    var transporter = nodemailer.createTransport({
-      service: 'ssl0.ovh.net',
+    let testAccount = await nodemailer.createTestAccount();
+
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+      host: 'ssl0.ovh.net',
+      port: 993,
+      secure: false, // true for 465, false for other ports
       auth: {
-        user: 'zakaria@zakariaothmane.fr',
-        pass: 'mohamedabdallah',
+        user: keys.senderEmail, // generated ethereal user
+        pass: keys.senderEmailPassword, // generated ethereal password
       },
     });
 
-    var mailOptions = {
-      from: 'zakaria@zakariaothmane.fr',
-      to: 'othmane.zakaria79@gmail.com',
-      subject: 'Sending Email using Node.js',
-      text: 'That was easy!',
-    };
-
-    transporter.sendMail(mailOptions, function(error, info) {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Email sent: ' + info.response);
-      }
+    // send mail with defined transport object
+    let info = await transporter.sendMail({
+      from: '"Fred Foo 👻" <' + keys.senderEmail + '>', // sender address
+      to: keys.recipientEmail, // list of receivers
+      subject: 'Hello ✔', // Subject line
+      text: 'Hello world?', // plain text body
+      html: '<b>Hello world?</b>', // html body
     });
-
-    // const transporter = nodemailer.createTransport({
-    //   service: 'ovh',
+    console.log('Message sent: %s', info.messageId);
+    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+    // Preview only available when sending through an Ethereal account
+    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+    // var transporter = nodemailer.createTransport({
+    //   service: 'ssl0.ovh.net',
     //   auth: {
-    //     user: keys.senderEmail,
-    //     pass: keys.senderEmailPassword,
+    //     user: 'zakaria@zakariaothmane.fr',
+    //     pass: 'mohamedabdallah',
     //   },
     // });
-    // const mailOptions = {
-    //   from: keys.senderEmail,
-    //   to: keys.recipientEmail,
-    //   subject: 'Un nouveau contact dans oz79.fr',
-    //   text: 'Un nouveau contact dans oz79.fr',
+    // var mailOptions = {
+    //   from: 'zakaria@zakariaothmane.fr',
+    //   to: 'othmane.zakaria79@gmail.com',
+    //   subject: 'Sending Email using Node.js',
+    //   text: 'That was easy!',
     // };
     // transporter.sendMail(mailOptions, function(error, info) {
     //   if (error) {
-    //     return res.send(error);
+    //     console.log(error);
+    //   } else {
+    //     console.log('Email sent: ' + info.response);
     //   }
     // });
     res.json({ error: false, message: savedContact });
-    // return res.json({ error: false, message: info.response });
   } catch (e) {
-    /* handle error */
-    return res.json({
+    /* handle error */ return res.json({
       error: true,
       message: 'Une erreur est survenue',
       errMessage: e,
@@ -83,8 +86,7 @@ exports.getContacts = async (req, res, next) => {
     const contacts = await Contact.find();
     return res.json({ error: false, contacts });
   } catch (e) {
-    /* handle error */
-    res.json({ error: true, message: e });
+    /* handle error */ res.json({ error: true, message: e });
   }
 };
 
@@ -96,7 +98,9 @@ exports.deleteContact = async (req, res, next) => {
     }
     return res.json({ error: true, message: 'Une erreur est survenue' });
   } catch (e) {
-    /* handle error */
-    res.json({ error: true, message: 'Une erreur est survenue' });
+    /* handle error */ res.json({
+      error: true,
+      message: 'Une erreur est survenue',
+    });
   }
 };
