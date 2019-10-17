@@ -14,6 +14,7 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 var contactsRouter = require('./routes/contacts');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var pdfRouter = require('./routes/pdf.js');
 
 var app = express();
 const store = new MongoDBStore({
@@ -45,6 +46,7 @@ app.get('/', (req, res) => res.send('En cours de développement'));
 
 app.use('/api/contacts', contactsRouter);
 app.use('/api/users', usersRouter);
+app.use('/pdf', pdfRouter);
 // app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
